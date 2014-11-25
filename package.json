@@ -1,6 +1,6 @@
 {
   "name": "tilelive-merge",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "A tilelive source that merges sources",
   "main": "index.js",
   "author": "Seth Fitzsimmons <seth@mojodna.net>",

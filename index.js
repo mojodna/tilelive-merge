@@ -150,8 +150,6 @@ module.exports = function(tilelive, options) {
           return !!x;
         });
 
-      console.log(headers);
-
       // filter out empty tiles
       var tiles = data
         .map(function(x) {

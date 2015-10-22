@@ -25,14 +25,14 @@ module.exports = function(tilelive, options) {
 
     this.uri = url.parse(uri, true);
 
-    var sources = this.uri.query.source || this.uri.query.sources;
+    var sourceUris = this.uri.query.source || this.uri.query.sources;
 
-    if (!Array.isArray(sources)) {
+    if (!Array.isArray(sourceUris)) {
       return setImmediate(callback, new Error("Two or more sources must be provided: " + JSON.stringify(uri)));
     }
 
     // TODO pass scale
-    return async.map(sources, async.apply(tilelive.load), function(err, sources) {
+    return async.map(sourceUris, async.apply(tilelive.load), function(err, sources) {
       if (err) {
         return callback(err);
       }
@@ -40,11 +40,12 @@ module.exports = function(tilelive, options) {
       return async.map(sources, function(src, next) {
         return src.getInfo(next);
       }, function(err, info) {
-        sources.forEach(function(src, i) {
-          src.info = info[i];
+        self.sources = sourceUris.map(function(uri, i) {
+          return {
+            info: info[i],
+            uri: uri
+          };
         });
-
-        self.sources = sources;
 
         return callback(null, self);
       });
@@ -69,26 +70,31 @@ module.exports = function(tilelive, options) {
       }
 
       var getTile = function(_z, _x, _y, callback) {
-        return src.getTile(_z, _x, _y, function(err, data, headers) {
-          if (err) {
-            if (err.message.match(/Tile does not exist/)) {
-              if (src.info.maskLevel && _z > src.info.maskLevel) {
-                _z = src.info.maskLevel;
-                _x = Math.floor(x / Math.pow(2, z - _z));
-                _y = Math.floor(y / Math.pow(2, z - _z));
+        return async.waterfall([
+          async.apply(tilelive.load, src.uri),
+          function(source, done) {
+            return source.getTile(_z, _x, _y, function(err, data, headers) {
+              if (err) {
+                if (err.message.match(/Tile does not exist/)) {
+                  if (src.info.maskLevel && _z > src.info.maskLevel) {
+                    _z = src.info.maskLevel;
+                    _x = Math.floor(x / Math.pow(2, z - _z));
+                    _y = Math.floor(y / Math.pow(2, z - _z));
 
-                return getTile(_z, _x, _y, callback);
+                    return getTile(_z, _x, _y, done);
+                  }
+
+                  // include a value to be passed down the waterfall
+                  return done(null, null, null);
+                }
+
+                return done(err);
               }
 
-              // include a value to be passed down the waterfall
-              return callback(null, null, null);
-            }
-
-            return callback(err);
+              return done(null, data, normalizeHeaders(headers));
+            });
           }
-
-          return callback(null, data, normalizeHeaders(headers));
-        });
+        ], callback);
       };
 
       return async.waterfall([

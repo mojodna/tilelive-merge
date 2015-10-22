@@ -2,6 +2,7 @@
 
 ## v1.0.2 - 10/22/15
 
+* Use async image encoding when concatenating rasters
 * Load sources on each request
 
 ## v1.0.1 - 9/26/15

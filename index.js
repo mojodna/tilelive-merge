@@ -51,6 +51,8 @@ module.exports = function(tilelive, options) {
     });
   };
 
+  // TODO allow custom headers (User-Agent, X-Forwarded-For) to be passed
+  // through
   Merge.prototype.getTile = function(z, x, y, callback) {
     var vtile = new mapnik.VectorTile(z, x, y);
 

@@ -119,7 +119,7 @@ module.exports = function(tilelive, options) {
           return next(null, data, headers);
         },
         function(buf, headers, next) {
-          if (!buf) {
+          if (!buf || buf.length === 0) {
             return next(null, null, null);
           }
 

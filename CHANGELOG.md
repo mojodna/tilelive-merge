@@ -1,5 +1,9 @@
 # Changes
 
+## v1.0.3 - 12/28/15
+
+* Don't composite empty buffers
+
 ## v1.0.2 - 10/22/15
 
 * Use async image encoding when concatenating rasters

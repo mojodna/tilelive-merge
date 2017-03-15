@@ -1,5 +1,9 @@
 # Changes
 
+## v1.1.0 - 3/14/17
+
+* Allow sources to fail, effecting fallback (@jingsam)
+
 ## v1.0.3 - 12/28/15
 
 * Don't composite empty buffers

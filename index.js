@@ -33,12 +33,16 @@ module.exports = function(tilelive, options) {
 
     // TODO pass scale
     return async.reduce(sourceUris, [], function(sources, uri, next) {
-      tilelive.load(uri, function(err, source) {
-        if (!err) sources.push({ uri: uri, source: source });
+      return tilelive.load(uri, function(err, source) {
+        if (!err) {
+          sources.push({ uri: uri, source: source });
+        }
         return next(null, sources);
       })
     }, function(err, sources) {
-      if (souces.length === 0) return callback(new Error("Not found any valid sources");
+      if (sources.length === 0) {
+        return callback(new Error("Not found any valid sources");
+      }
       
       return async.map(sources, function(src, next) {
         return src.source.getInfo(next);
@@ -52,7 +56,7 @@ module.exports = function(tilelive, options) {
 
         return callback(null, self);
       });
-    });   
+    });
   };
 
   // TODO allow custom headers (User-Agent, X-Forwarded-For) to be passed

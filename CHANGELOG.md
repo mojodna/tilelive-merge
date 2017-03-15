@@ -1,5 +1,9 @@
 # Changes
 
+## v1.1.1 - 3/14/17
+
+* (Fix) rebase appropriately
+
 ## v1.1.0 - 3/14/17
 
 * Allow sources to fail, effecting fallback (@jingsam)

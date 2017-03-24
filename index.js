@@ -42,7 +42,7 @@ module.exports = function(tilelive, options) {
       })
     }, function(err, sources) {
       if (sources.length === 0) {
-        return callback(new Error("Did not find any valid sources");
+        return callback(new Error("Did not find any valid sources"));
       }
 
       return async.map(sources, function(src, next) {

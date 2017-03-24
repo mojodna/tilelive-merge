@@ -1,5 +1,9 @@
 # Changes
 
+## v1.1.2 - 3/24/17
+
+* Typo (@edpop)
+
 ## v1.1.1 - 3/14/17
 
 * (Fix) rebase appropriately

@@ -22,10 +22,12 @@ var normalizeHeaders = function(headers) {
 module.exports = function(tilelive, options) {
   var Merge = function(uri, callback) {
     var self = this;
+    
+    if (typeof uri === 'string') {
+        uri = url.parse(uri, true);
+    }
 
-    this.uri = url.parse(uri, true);
-
-    var sourceUris = this.uri.query.source || this.uri.query.sources;
+    var sourceUris = uri.query.source || uri.query.sources;
 
     if (!Array.isArray(sourceUris)) {
       return setImmediate(callback, new Error("Two or more sources must be provided: " + JSON.stringify(uri)));
